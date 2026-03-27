@@ -30,16 +30,34 @@ const OMDBSearchByPage = async (searchText, page = 1) => {
 
 const OMDBSearchComplete = async (searchText) => {
   let returnObject = {
-
       respuesta     : false,
-
       cantidadTotal : 0,
-
       datos         : []
-
     };
 
-  // No seas vago, acá hay que hacer el cuerpo de la función!!!
+  try {
+    const firstPage = await OMDBSearchByPage(searchText, 1);
+    if (!firstPage.respuesta) {
+      return returnObject;
+    }
+
+    returnObject.respuesta = true;
+    returnObject.cantidadTotal = firstPage.cantidadTotal;
+    returnObject.datos = [...firstPage.datos];
+
+    const totalPages = Math.ceil(firstPage.cantidadTotal / 10);
+
+    for (let page = 2; page <= totalPages; page++) {
+      const pageResult = await OMDBSearchByPage(searchText, page);
+
+      if (pageResult.respuesta) {
+        returnObject.datos = [...returnObject.datos, ...pageResult.datos];
+      }
+    }
+  } catch (error) {
+    console.error("Error en OMDBSearchComplete:", error.message);
+  }
+
   return returnObject;
 
 };
