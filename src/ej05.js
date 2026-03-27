@@ -11,7 +11,7 @@ console.log(miObjeto);
 function parsearUrl(laURL) {
     try {
         const url = new URL(laURL);
-        return {
+        return { 
             host: url.host,
             pathname: url.pathname,
             parametros: Object.fromEntries(url.searchParams)

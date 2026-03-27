@@ -70,7 +70,19 @@ const OMDBGetByImdbID = async (imdbID) => {
       datos         : {}
     };
 
-  // No seas vago, acá hay que hacer el cuerpo de la función!!!
+  try {
+    const url = `http://www.omdbapi.com/?apikey=${APIKEY}&i=${imdbID}`;
+    const apiResponse = await axios.get(url);
+    const data = apiResponse.data;
+
+    if (data.Response === "True") {
+      returnObject.respuesta = true;
+      returnObject.cantidadTotal = 1;
+      returnObject.datos = data;
+    }
+  } catch (error) {
+    console.error("Error en OMDBGetByImdbID:", error.message);
+  }
   return returnObject;
 
 };
